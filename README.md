@@ -1,8 +1,12 @@
 # ommperator
+Python interface to operate on OpenMM objects
+
 Wrapper around OpenMM system, topology, and force objects.
 Mainly used for the force-wrappers (ForceOmmperators) to
 modify parameters in groups
 
+Example: modify foyer to return an openmm system and topology prior to 
+converting into a parmed structure
 ```python3
 import mbuild as mb
 import parmed as pmd
