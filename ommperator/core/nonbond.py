@@ -94,9 +94,19 @@ class CustomNonbondedForceOmmperator:
     def parameters(self):
         return self.force.getParticleParameters(self.parameter_index)
 
+    @property
+    def energy_function(self):
+        return self.force.getEnergyFunction()
+
     def set_params(self, *args):
+        original_parameters = self.parameters
+        updated_args = [*args]
+        for i, (orig, new) in enumerate(zip(original_parameters, args)):
+            if new == -1: # If one of the args is -1, retain original parameter
+                updated_args[i] = orig
+
         self.force.setParticleParameters(self.parameter_index,
-                args)
+                updated_args)
 
         return self.parameter_index
 
