@@ -4,7 +4,8 @@ from .bond import HarmonicBondForceOmmperator
 from .angle import HarmonicAngleForceOmmperator
 from .dihedral import (PeriodicTorsionForceOmmperator,
                         RBTorsionForceOmmperator)
-from .nonbond import NonbondedForceOmmperator
+from .nonbond import (NonbondedForceOmmperator, 
+                        CustomNonbondedForceOmmperator)
 
 
 class AtomOmmperator():
@@ -24,9 +25,12 @@ class AtomOmmperator():
     dihedrals : list 
         TorsionForceOmmperators
     nonbonds: list 
-        NonbondedForceOmmperators"""
+        NonbondedForceOmmperators
+    custom_nonbonds : list
+        CustomNonbondedForceOmmperators"""
     def __init__(self, ommperator, atom, 
-            bonds=None, angles=None, dihedrals=None, nonbonds=None):
+            bonds=None, angles=None, dihedrals=None, nonbonds=None,
+            custom_nonbonds=None):
         self._ommperator = ommperator
         self._atom = atom
 
@@ -42,6 +46,9 @@ class AtomOmmperator():
         if nonbonds is None:
             nonbonds = [] 
         self._nonbonds = nonbonds
+        if custom_nonbonds is None:
+            custom_nonbonds = []
+        self._custom_nonbonds = custom_nonbonds
 
         for force in self.ommperator.system.getForces():
             if isinstance(force, openmm.HarmonicBondForce):
@@ -54,6 +61,8 @@ class AtomOmmperator():
                 self._identify_periodic_torsions(force)
             if isinstance(force, openmm.NonbondedForce):
                 self._identify_nonbonds(force)
+            if isinstance(force, openmm.CustomNonbondedForce):
+                self._identify_custom_nonbonds(force)
 
     @property
     def bonds(self):
@@ -70,6 +79,10 @@ class AtomOmmperator():
     @property
     def nonbonds(self):
         return self._nonbonds
+
+    @property
+    def custom_nonbonds(self):
+        return self._custom_nonbonds
 
     @property
     def ommperator(self):
@@ -117,7 +130,7 @@ class AtomOmmperator():
                 to_add = HarmonicAngleForceOmmperator(self, force, i)
                 self.angles.append(to_add)
 
-    def _identify_periodic_torions(self, force):
+    def _identify_periodic_torsions(self, force):
         for i in range(force.getNumTorsions()):
             p1, p2, p3, p4, n, phase, k = force.getTorsionParameters(i)
             if self.index in [p1,p2,p3,p4]:
@@ -134,6 +147,10 @@ class AtomOmmperator():
     def _identify_nonbonds(self, force):
         to_add = NonbondedForceOmmperator(self, force, self.index)
         self.nonbonds.append(to_add)
+
+    def _identify_custom_nonbonds(self, force):
+        to_add = CustomNonbondedForceOmmperator(self, force, self.index)
+        self.custom_nonbonds.append(to_add)
 
     def __repr__(self):
         return ("<AtomOmmperator, " +

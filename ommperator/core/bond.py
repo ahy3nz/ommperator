@@ -57,13 +57,13 @@ class HarmonicBondForceOmmperator():
         self.force.setBondParameters(self.parameter_index, self.particle1,
                 particle2, self.length, self.k)
 
-    def set_params(self, p1=None, p2=None, l=None, k=None):
+    def set_params(self, p1=None, p2=None, length=None, k=None):
         if p1 is None:
             p1 = self.particle1
         if p2 is None:
             p2 = self.particle2
-        if l is None:
-            l = self.length
+        if length is None:
+            length = self.length
         if k is None:
             k = self.k
 

@@ -3,8 +3,8 @@ from .atom import AtomOmmperator
 from .bond import HarmonicBondForceOmmperator
 from .angle import HarmonicAngleForceOmmperator
 from .dihedral import PeriodicTorsionForceOmmperator, RBTorsionForceOmmperator
-from .nonbond import NonbondedForceOmmperator
-from .forcecontainer import ForceContainer
+from .nonbond import NonbondedForceOmmperator, CustomNonbondedForceOmmperator
+from .forcecontainer import ForceContainer, CustomForceContainer
 
 class Ommperator:
     """ An interface to operate on openmm systems and topologies 
@@ -34,10 +34,13 @@ class Ommperator:
         self.angles = []
         self.dihedrals = []
         self.nonbonds = [] 
+        self.custom_nonbonds = [] 
+
         self.bond_types = {}
         self.angle_types = {}
         self.dihedral_types = {}
         self.nonbond_types = {}
+        self.custom_nonbond_types = {}
 
         self._parse_atoms(topology)
 
@@ -52,6 +55,8 @@ class Ommperator:
                 self._parse_RB_torsions(force)
             if isinstance(force, openmm.NonbondedForce):
                 self._parse_nonbondeds(force)
+            if isinstance(force, openmm.CustomNonbondedForce):
+                self._parse_custom_nonbondeds(force)
 
 
     def _parse_atoms(self, topology):
@@ -152,3 +157,18 @@ class Ommperator:
 
             self.nonbond_types[key] = force_container
             self.nonbonds.append(to_add)
+
+    def _parse_custom_nonbondeds(self, force):
+        """ For every set of parameters within the CustomNonbondedForce,
+        create an associate CustomNonbonddForceOmmperator """
+        for i in range(force.getNumParticles()):
+            params = force.getParticleParameters(i)
+            to_add = CustomNonbondedForceOmmperator(self, force, i)
+            key = self.atoms[i].id
+
+            force_container = self.custom_nonbond_types.get(key, 
+                    CustomForceContainer())
+            force_container.append(to_add)
+
+            self.custom_nonbond_types[key] = force_container
+            self.custom_nonbonds.append(to_add)
