@@ -68,7 +68,7 @@ class HarmonicBondForceOmmperator():
             k = self.k
 
         self.force.setBondParameters(self.force_index,
-                p1, p2, l, k)
+                p1, p2, length, k)
 
         return self.force_index
 
