@@ -5,12 +5,12 @@ class HarmonicAngleForceOmmperator():
     Most properties access the underlying Force object
     Most setters modify the underlying Force object,
      """
-    def __init__(self, ommperator, force, parameter_index):
+    def __init__(self, ommperator, force, force_index):
         self.ommperator = ommperator
 
         # OMM Harmonic Angle Force Parameters
         self._force = force # The HarmonicAngleForce object
-        self._parameter_index = parameter_index # The index within the Force
+        self._force_index = force_index # The index within the Force
 
 
     @property
@@ -18,52 +18,52 @@ class HarmonicAngleForceOmmperator():
         return self._force
 
     @property
-    def parameter_index(self):
-        return self._parameter_index
+    def force_index(self):
+        return self._force_index
 
     @property
     def particle1(self):
-        return self.force.getAngleParameters(self.parameter_index)[0]
+        return self.force.getAngleParameters(self.force_index)[0]
 
     @property
     def particle2(self):
-        return self.force.getAngleParameters(self.parameter_index)[1]
+        return self.force.getAngleParameters(self.force_index)[1]
 
     @property
     def particle3(self):
-        return self.force.getAngleParameters(self.parameter_index)[2]
+        return self.force.getAngleParameters(self.force_index)[2]
 
     @property
     def angle(self):
-        return self.force.getAngleParameters(self.parameter_index)[3]
+        return self.force.getAngleParameters(self.force_index)[3]
 
     @property
     def k(self):
-        return self.force.getAngleParameters(self.parameter_index)[4]
+        return self.force.getAngleParameters(self.force_index)[4]
 
     @angle.setter
     def angle(self, angle):
-        self.force.setAngleParameters(self.parameter_index, self.particle1,
+        self.force.setAngleParameters(self.force_index, self.particle1,
                 self.particle2, self.particle3, angle, self.k)
 
     @k.setter
     def k(self, k): 
-        self.force.setAngleParameters(self.parameter_index, self.particle1,
+        self.force.setAngleParameters(self.force_index, self.particle1,
                 self.particle2, self.particle3, self.angle, k)
 
     @particle1.setter
     def particle1(self, particle1):
-        self.force.setAngleParameters(self.parameter_index, particle1,
+        self.force.setAngleParameters(self.force_index, particle1,
                 self.particle2, self.particle3, self.angle, self.k)
 
     @particle2.setter
     def particle2(self, particle2):
-        self.force.setAngleParameters(self.parameter_index, self.particle1,
+        self.force.setAngleParameters(self.force_index, self.particle1,
                 particle2, self.particle3, self.angle, self.k)
 
     @particle3.setter
     def particle3(self, particle3):
-        self.force.setAngleParameters(self.parameter_index, self.particle1,
+        self.force.setAngleParameters(self.force_index, self.particle1,
                 self.particle2, particle3, self.angle, self.k)
 
     def set_params(self, p1=None, p2=None, p3=None, angle=None, k=None):
@@ -78,14 +78,14 @@ class HarmonicAngleForceOmmperator():
         if k is None:
             k = self.k
 
-        self.force.setAngleParameters(self.parameter_index,
+        self.force.setAngleParameters(self.force_index,
                 p1, p2, p3, angle, k)
 
-        return self.parameter_index
+        return self.force_index
 
     def __repr__(self):
         return ("<HarmonicAngleOmmperator, " +
-                "i={}, ".format(self.parameter_index) +
+                "i={}, ".format(self.force_index) +
                 "p1={}, ".format(self.particle1) +
                 "p2={}, ".format(self.particle2) +
                 "p3={}, ".format(self.particle3) +

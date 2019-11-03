@@ -8,7 +8,7 @@ class ForceContainer(list):
 class CustomForceContainer(list):
     """ A force container is a container that holds CustomForceOmmperators.
     It facilitaties mass-modifying properties"""
-    def update(self, *args):
+    def update(self, *args, **kwargs):
         for force_ommp in self:
-            force_ommp.set_params(*args)
+            force_ommp.set_params(*args, **kwargs)
 

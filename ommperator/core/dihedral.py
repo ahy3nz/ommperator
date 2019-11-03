@@ -5,12 +5,12 @@ class RBTorsionForceOmmperator():
     Most properties access the underlying Force object
     Most setters modify the underlying Force object,
      """
-    def __init__(self, ommperator, force, parameter_index):
+    def __init__(self, ommperator, force, force_index):
         self.ommperator = ommperator
 
         # OMM RB Torsion Force Parameters
         self._force = force # The RBTorsionForce object
-        self._parameter_index = parameter_index # The index within the Force
+        self._force_index = force_index # The index within the Force
 
 
     @property
@@ -18,106 +18,106 @@ class RBTorsionForceOmmperator():
         return self._force
 
     @property
-    def parameter_index(self):
-        return self._parameter_index
+    def force_index(self):
+        return self._force_index
 
     @property
     def particle1(self):
-        return self.force.getTorsionParameters(self.parameter_index)[0]
+        return self.force.getTorsionParameters(self.force_index)[0]
 
     @property
     def particle2(self):
-        return self.force.getTorsionParameters(self.parameter_index)[1]
+        return self.force.getTorsionParameters(self.force_index)[1]
 
     @property
     def particle3(self):
-        return self.force.getTorsionParameters(self.parameter_index)[2]
+        return self.force.getTorsionParameters(self.force_index)[2]
 
     @property
     def particle4(self):
-        return self.force.getTorsionParameters(self.parameter_index)[3]
+        return self.force.getTorsionParameters(self.force_index)[3]
 
     @property
     def c0(self):
-        return self.force.getTorsionParameters(self.parameter_index)[4]
+        return self.force.getTorsionParameters(self.force_index)[4]
 
     @property
     def c1(self):
-        return self.force.getTorsionParameters(self.parameter_index)[5]
+        return self.force.getTorsionParameters(self.force_index)[5]
 
     @property
     def c2(self):
-        return self.force.getTorsionParameters(self.parameter_index)[6]
+        return self.force.getTorsionParameters(self.force_index)[6]
 
     @property
     def c3(self):
-        return self.force.getTorsionParameters(self.parameter_index)[7]
+        return self.force.getTorsionParameters(self.force_index)[7]
 
     @property
     def c4(self):
-        return self.force.getTorsionParameters(self.parameter_index)[8]
+        return self.force.getTorsionParameters(self.force_index)[8]
 
     @property
     def c5(self):
-        return self.force.getTorsionParameters(self.parameter_index)[9]
+        return self.force.getTorsionParameters(self.force_index)[9]
 
     @c0.setter
     def c0(self, c0):
-        self.force.setTorsionParameters(self.parameter_index, self.particle1,
+        self.force.setTorsionParameters(self.force_index, self.particle1,
                 self.particle2, self.particle3, self.particle4,
                 c0, self.c1, self.c2, self.c3, self.c4, self.c5)
 
     @c1.setter
     def c1(self, c1):
-        self.force.setTorsionParameters(self.parameter_index, self.particle1,
+        self.force.setTorsionParameters(self.force_index, self.particle1,
                 self.particle2, self.particle3, self.particle4,
                 self.c0, c1, self.c2, self.c3, self.c4, self.c5)
 
     @c2.setter
     def c2(self, c2):
-        self.force.setTorsionParameters(self.parameter_index, self.particle1,
+        self.force.setTorsionParameters(self.force_index, self.particle1,
                 self.particle2, self.particle3, self.particle4,
                 self.c0, self.c1, c2, self.c3, self.c4, self.c5)
 
     @c3.setter
     def c3(self, c3):
-        self.force.setTorsionParameters(self.parameter_index, self.particle1,
+        self.force.setTorsionParameters(self.force_index, self.particle1,
                 self.particle2, self.particle3, self.particle4,
                 self.c0, self.c1, self.c2, c3, self.c4, self.c5)
 
     @c4.setter
     def c4(self, c4):
-        self.force.setTorsionParameters(self.parameter_index, self.particle1,
+        self.force.setTorsionParameters(self.force_index, self.particle1,
                 self.particle2, self.particle3, self.particle4,
                 self.c0, self.c1, self.c2, self.c3, c4, self.c5)
 
     @c5.setter
     def c5(self, c5):
-        self.force.setTorsionParameters(self.parameter_index, self.particle1,
+        self.force.setTorsionParameters(self.force_index, self.particle1,
                 self.particle2, self.particle3, self.particle4,
                 self.c0, self.c1, self.c2, self.c3, self.c4, c5)
 
     @particle1.setter
     def particle1(self, particle1):
-        self.force.setTorsionParameters(self.parameter_index, particle1,
+        self.force.setTorsionParameters(self.force_index, particle1,
                 self.particle2, self.particle3, self.particle4,
                 self.c0, self.c1, self.c2, self.c3, self.c4, self.c5)
 
     @particle2.setter
     def particle2(self, particle2):
-        self.force.setTorsionParameters(self.parameter_index, self.particle1,
+        self.force.setTorsionParameters(self.force_index, self.particle1,
                 particle2, self.particle3, self.particle4,
                 self.c0, self.c1, self.c2, self.c3, self.c4, self.c5)
 
     @particle3.setter
     def particle3(self, particle3):
-        self.force.setTorsionParameters(self.parameter_index, self.particle1,
+        self.force.setTorsionParameters(self.force_index, self.particle1,
                 self.particle2, particle3, self.particle4,
                 self.c0, self.c1, self.c2, self.c3, self.c4, self.c5)
 
     @particle4.setter
     def particle4(self, particle4):
-        self.force.setTorsionParameters(self.parameter_index, self.particle1,
+        self.force.setTorsionParameters(self.force_index, self.particle1,
                 self.particle2, self.particle3, particle4,
                 self.c0, self.c1, self.c2, self.c3, self.c4, self.c5)
 
@@ -144,14 +144,14 @@ class RBTorsionForceOmmperator():
         if c5 is None:
             c5 = self.c5
 
-        self.force.setTorsionParameters(self.parameter_index,
+        self.force.setTorsionParameters(self.force_index,
                 p1, p2, p3, p4, c0, c1, c2, c3, c4, c5)
 
-        return self.parameter_index
+        return self.force_index
 
     def __repr__(self):
         return ("<RBTorsionOmmperator, " +
-                "i={}, ".format(self.parameter_index) +
+                "i={}, ".format(self.force_index) +
                 "p1={}, ".format(self.particle1) +
                 "p2={}, ".format(self.particle2) +
                 "p3={}, ".format(self.particle3) +
@@ -170,12 +170,12 @@ class PeriodicTorsionForceOmmperator():
     Most properties access the underlying Force object
     Most setters modify the underlying Force object,
      """
-    def __init__(self, ommperator, force, parameter_index):
+    def __init__(self, ommperator, force, force_index):
         self.ommperator = ommperator
 
         # OMM Periodic Torsion Force Parameters
         self._force = force # The PeriodicTorsionForce object
-        self._parameter_index = parameter_index # The index within the Force
+        self._force_index = force_index # The index within the Force
 
 
     @property
@@ -183,76 +183,76 @@ class PeriodicTorsionForceOmmperator():
         return self._force
 
     @property
-    def parameter_index(self):
-        return self._parameter_index
+    def force_index(self):
+        return self._force_index
 
     @property
     def particle1(self):
-        return self.force.getTorsionParameters(self.parameter_index)[0]
+        return self.force.getTorsionParameters(self.force_index)[0]
 
     @property
     def particle2(self):
-        return self.force.getTorsionParameters(self.parameter_index)[1]
+        return self.force.getTorsionParameters(self.force_index)[1]
 
     @property
     def particle3(self):
-        return self.force.getTorsionParameters(self.parameter_index)[2]
+        return self.force.getTorsionParameters(self.force_index)[2]
 
     @property
     def particle4(self):
-        return self.force.getTorsionParameters(self.parameter_index)[3]
+        return self.force.getTorsionParameters(self.force_index)[3]
 
     @property
     def n(self):
-        return self.force.getTorsionParameters(self.parameter_index)[4]
+        return self.force.getTorsionParameters(self.force_index)[4]
 
     @property
     def phase(self):
-        return self.force.getTorsionParameters(self.parameter_index)[4]
+        return self.force.getTorsionParameters(self.force_index)[4]
 
     @property
     def k(self):
-        return self.force.getTorsionParameters(self.parameter_index)[5]
+        return self.force.getTorsionParameters(self.force_index)[5]
 
     @n.setter
     def n(self, n):
-        self.force.setTorsionParameters(self.parameter_index, self.particle1,
+        self.force.setTorsionParameters(self.force_index, self.particle1,
                 self.particle2, self.particle3, self.particle4,
                 n, self.phase, self.k)
 
     @phase.setter
     def phase(self, phase):
-        self.force.setTorsionParameters(self.parameter_index, self.particle1,
+        self.force.setTorsionParameters(self.force_index, self.particle1,
                 self.particle2, self.particle3, self.particle4,
                 self.n, phase, self.k)
 
     @k.setter
     def k(self, k): 
-        self.force.setTorsionParameters(self.parameter_index, self.particle1,
+        self.force.setTorsionParameters(self.force_index, self.particle1,
                 self.particle2, self.particle3, self.particle4,
                 self.n, self.phase, k)
 
     @particle1.setter
     def particle1(self, particle1):
-        self.force.setTorsionParameters(self.parameter_index, particle1,
+        self.force.setTorsionParameters(self.force_index, particle1,
                 self.particle2, self.particle3, self.particle4,
                 self.n, self.phase, self.k)
 
     @particle2.setter
     def particle2(self, particle2):
-        self.force.setTorsionParameters(self.parameter_index, self.particle1,
+        self.force.setTorsionParameters(self.force_index, self.particle1,
                 particle2, self.particle3, self.particle4,
                 self.n, self.phase, self.k)
 
     @particle3.setter
     def particle3(self, particle3):
-        self.force.setTorsionParameters(self.parameter_index, self.particle1,
+        self.force.setTorsionParameters(self.force_index, self.particle1,
                 self.particle2, particle3, self.particle4,
                 self.n, self.phase, self.k)
 
     @particle4.setter
     def particle4(self, particle4):
-        self.force.setTorsionParameters(self.parameter_index, self.particle1,
+        self.force.setTorsionParameters(self.force_index, self.particle1,
                 self.particle2, self.particle3, particle4,
                 self.n, self.phase, self.k)
 
@@ -273,14 +273,14 @@ class PeriodicTorsionForceOmmperator():
         if k is None:
             k = self.k
 
-        self.force.setTorsionParameters(self.parameter_index,
+        self.force.setTorsionParameters(self.force_index,
                 p1, p2, p3, p4, n, phase, k)
 
-        return self.parameter_index
+        return self.force_index
 
     def __repr__(self):
         return ("<PeriodicTorsionOmmperator, " +
-                "i={}, ".format(self.parameter_index) +
+                "i={}, ".format(self.force_index) +
                 "p1={}, ".format(self.particle1) +
                 "p2={}, ".format(self.particle2) +
                 "p3={}, ".format(self.particle3) +
