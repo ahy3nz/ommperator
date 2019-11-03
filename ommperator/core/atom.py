@@ -1,6 +1,5 @@
 import simtk.openmm as openmm
 
-from .forcecontainer import ForceContainer
 from .bond import HarmonicBondForceOmmperator
 from .angle import HarmonicAngleForceOmmperator
 from .dihedral import (PeriodicTorsionForceOmmperator,
@@ -18,13 +17,13 @@ class AtomOmmperator():
     index : int
         atomic index
     atom : openmm.Atom
-    bonds : ForceContainer
+    bonds : list
         BondForceOmmperators
-    angles : ForceContainer
+    angles : list  
        AngleForceOmmperators 
-    dihedrals : ForceContainer 
+    dihedrals : list 
         TorsionForceOmmperators
-    nonbonds: ForceContainer
+    nonbonds: list 
         NonbondedForceOmmperators"""
     def __init__(self, ommperator, atom, 
             bonds=None, angles=None, dihedrals=None, nonbonds=None):
@@ -32,16 +31,16 @@ class AtomOmmperator():
         self._atom = atom
 
         if bonds is None:
-            bonds = ForceContainer()
+            bonds = []
         self._bonds = bonds
         if angles is None:
-            angles = ForceContainer()
+            angles =  []
         self._angles = angles
         if dihedrals is None:
-            dihedrals = ForceContainer()
+            dihedrals = [] 
         self._dihedrals = dihedrals
         if nonbonds is None:
-            nonbonds = ForceContainer()
+            nonbonds = [] 
         self._nonbonds = nonbonds
 
         for force in self.ommperator.system.getForces():

@@ -11,11 +11,11 @@ class Ommperator:
        
     Parameters
     ---------
-    atoms : ForceContainer of AtomOmmperators
-    bonds : ForceContainer of BondOmmperators
-    angles : ForceContainer of AngleOmmperators
-    dihedrals : ForceContainer of TorsionOmmperators
-    nonbonds : ForceContainer of NonbondOmmperators
+    atoms : list of AtomOmmperators
+    bonds : list of BondOmmperators
+    angles : list of AngleOmmperators
+    dihedrals : list of TorsionOmmperators
+    nonbonds : list of NonbondOmmperators
     bond_types : dict
         Relates key to ForceContainer of associated BondOmmperators
     angle_types : dict
@@ -29,11 +29,11 @@ class Ommperator:
         self.system = system
         self.topology = topology
 
-        self.atoms = ForceContainer()
-        self.bonds = ForceContainer()
-        self.angles = ForceContainer()
-        self.dihedrals = ForceContainer()
-        self.nonbonds = ForceContainer()
+        self.atoms = []
+        self.bonds = [] 
+        self.angles = []
+        self.dihedrals = []
+        self.nonbonds = [] 
         self.bond_types = {}
         self.angle_types = {}
         self.dihedral_types = {}
@@ -52,7 +52,6 @@ class Ommperator:
                 self._parse_RB_torsions(force)
             if isinstance(force, openmm.NonbondedForce):
                 self._parse_nonbondeds(force)
-
 
 
     def _parse_atoms(self, topology):
