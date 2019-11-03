@@ -1,18 +1,42 @@
 import simtk.openmm as openmm
+from .atom import AtomOmmperator
 from .bond import HarmonicBondForceOmmperator
 from .angle import HarmonicAngleForceOmmperator
 from .dihedral import PeriodicTorsionForceOmmperator, RBTorsionForceOmmperator
+from .nonbond import NonbondedForceOmmperator
 from .forcecontainer import ForceContainer
 
 class Ommperator:
-    """ An interface to operate on openmm systems and topologies """
+    """ An interface to operate on openmm systems and topologies 
+       
+    Parameters
+    ---------
+    atoms : ForceContainer of AtomOmmperators
+    bonds : ForceContainer of BondOmmperators
+    angles : ForceContainer of AngleOmmperators
+    dihedrals : ForceContainer of TorsionOmmperators
+    bond_types : dict
+        Relates key to ForceContainer of associated BondOmmperators
+    angle_types : dict
+        Relates key to ForceContainer of associated AngleOmmperators
+    dihedral_types : dict
+        Relates key to ForceContainer of associated TorsionOmmperators
+    """
     def __init__(self, system, topology):
         self.system = system
         self.topology = topology
 
-        self.bonds = {}
-        self.angles = {}
-        self.dihedrals = {}
+        self.atoms = ForceContainer()
+        self.bonds = ForceContainer()
+        self.angles = ForceContainer()
+        self.dihedrals = ForceContainer()
+        self.nonbonds = ForceContainer()
+        self.bond_types = {}
+        self.angle_types = {}
+        self.dihedral_types = {}
+        self.nonbond_types = {}
+
+        self._parse_atoms(topology)
 
         for force in self.system.getForces():
             if isinstance(force, openmm.HarmonicBondForce):
@@ -23,11 +47,13 @@ class Ommperator:
                 self._parse_periodic_torsions(force)
             if isinstance(force, openmm.RBTorsionForce):
                 self._parse_RB_torsions(force)
+            if isinstance(force, openmm.NonbondedForce):
+                self._parse_nonbondeds(force)
 
 
-    @property
-    def atoms(self):
-        return [*self.topology.atoms()]
+
+    def _parse_atoms(self, topology):
+        self.atoms = [AtomOmmperator(self, atom) for atom in topology.atoms()]
 
     def _parse_harmonic_bonds(self, force):
         """ For every set of parameters within the HarmonicBondForce,
@@ -37,10 +63,11 @@ class Ommperator:
             to_add = HarmonicBondForceOmmperator(self, force, i)
             first, second = sorted([self.atoms[p1].id, self.atoms[p2].id])
             key = '{}-{}'.format(first,second)
-            force_container = self.bonds.get(key, ForceContainer())
+            force_container = self.bond_types.get(key, ForceContainer())
             force_container.append(to_add)
 
-            self.bonds[key] = force_container
+            self.bond_types[key] = force_container
+            self.bonds.append(to_add)
 
     def _parse_harmonic_angles(self, force):
         """ For every set of parameters within the HarmonicAngleForce,
@@ -51,10 +78,11 @@ class Ommperator:
             first, third = sorted([self.atoms[p1].id, self.atoms[p3].id])
             second = self.atoms[p2].id
             key = '{}-{}-{}'.format(first, second, third)
-            force_container = self.angles.get(key, ForceContainer())
+            force_container = self.angle_types.get(key, ForceContainer())
             force_container.append(to_add)
 
-            self.angles[key] = force_container
+            self.angle_types[key] = force_container
+            self.angles.append(to_add)
 
     def _parse_periodic_torsions(self, force):
         """ For every set of parameters within the PeriodicTorsionForce,
@@ -76,10 +104,11 @@ class Ommperator:
                 p4_id = self.atoms[p4].id
                 key = '{}-{}-{}-{}'.format(p1_id, p2_id, p3_id, p4_id)
 
-            force_container = self.dihedrals.get(key, ForceContainer())
+            force_container = self.dihedral_types.get(key, ForceContainer())
             force_container.append(to_add)
 
-            self.dihedrals[key] = force_container
+            self.dihedral_types[key] = force_container
+            self.dihedrals.append(to_add)
 
     def _parse_RB_torsions(self, force):
         """ For every set of parameters within the RBTorsionForce,
@@ -101,7 +130,23 @@ class Ommperator:
                 p4_id = self.atoms[p4].id
                 key = '{}-{}-{}-{}'.format(p1_id, p2_id, p3_id, p4_id)
 
-            force_container = self.dihedrals.get(key, ForceContainer())
+            force_container = self.dihedral_types.get(key, ForceContainer())
             force_container.append(to_add)
 
-            self.dihedrals[key] = force_container
+            self.dihedral_types[key] = force_container
+            self.dihedrals.append(to_add)
+
+
+    def _parse_nonbondeds(self, force):
+        """ For every set of parameters within the NonbondedForce,
+        create an associate NonbondedForceOmmperator """
+        for i in range(force.getNumParticles()):
+            charge, sigma, epsilon = force.getParticleParameters(i)
+            to_add = NonbondedForceOmmperator(self, force, i)
+            key = self.atoms[i].id
+
+            force_container = self.nonbond_types.get(key, ForceContainer())
+            force_container.append(to_add)
+
+            self.nonbond_types[key] = force_container
+            self.nonbonds.append(to_add)
