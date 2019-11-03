@@ -3,7 +3,12 @@ Python interface to operate on OpenMM objects
 
 Wrapper around OpenMM system, topology, and force objects.
 Mainly used for the force-wrappers (ForceOmmperators) to
-modify parameters in groups
+modify parameters in groups.
+Most Ommperator functions are aimed at operating on or viewing
+into the underlying OpenMM system and topology. 
+Thus, any functions to modify an Ommperator propagate to the
+associated OpenMM object, which is then reflected in other
+Ommperator objects.
 
 Example: modify foyer to return an openmm system and topology prior to 
 converting into a parmed structure

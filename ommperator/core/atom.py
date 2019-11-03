@@ -18,10 +18,14 @@ class AtomOmmperator():
     index : int
         atomic index
     atom : openmm.Atom
-    residue :
-    bonds :
-    angles : 
-    dihedrals : """
+    bonds : ForceContainer
+        BondForceOmmperators
+    angles : ForceContainer
+       AngleForceOmmperators 
+    dihedrals : ForceContainer 
+        TorsionForceOmmperators
+    nonbonds: ForceContainer
+        NonbondedForceOmmperators"""
     def __init__(self, ommperator, atom, 
             bonds=None, angles=None, dihedrals=None, nonbonds=None):
         self._ommperator = ommperator

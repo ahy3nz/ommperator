@@ -15,12 +15,15 @@ class Ommperator:
     bonds : ForceContainer of BondOmmperators
     angles : ForceContainer of AngleOmmperators
     dihedrals : ForceContainer of TorsionOmmperators
+    nonbonds : ForceContainer of NonbondOmmperators
     bond_types : dict
         Relates key to ForceContainer of associated BondOmmperators
     angle_types : dict
         Relates key to ForceContainer of associated AngleOmmperators
     dihedral_types : dict
         Relates key to ForceContainer of associated TorsionOmmperators
+    nonbond_types : dict
+        Relates key to ForceContainer of associated NonbondOmmperators
     """
     def __init__(self, system, topology):
         self.system = system
