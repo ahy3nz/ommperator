@@ -208,11 +208,11 @@ class PeriodicTorsionForceOmmperator():
 
     @property
     def phase(self):
-        return self.force.getTorsionParameters(self.force_index)[4]
+        return self.force.getTorsionParameters(self.force_index)[5]
 
     @property
     def k(self):
-        return self.force.getTorsionParameters(self.force_index)[5]
+        return self.force.getTorsionParameters(self.force_index)[6]
 
     @n.setter
     def n(self, n):
