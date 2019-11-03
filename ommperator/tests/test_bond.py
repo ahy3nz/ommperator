@@ -41,3 +41,17 @@ class TestBond(BaseTest):
         assert my_bond_ommp.length == harmonic_bond.getBondParameters(0)[2]
         assert my_bond_ommp.k == harmonic_bond.getBondParameters(0)[3]
 
+    def test_modify_omm(self, ethane_system_topology):
+        harmonic_bond = openmm.HarmonicBondForce()
+        harmonic_bond.addBond(0, 1, 10, 20)
+        my_ommp = Ommperator(ethane_system_topology[0], ethane_system_topology[1])
+        my_bond_ommp = HarmonicBondForceOmmperator(my_ommp, harmonic_bond, 0)
+
+        harmonic_bond.setBondParameters(0, 1, 2, 20, 30)
+
+        assert my_bond_ommp.particle1 == harmonic_bond.getBondParameters(0)[0]
+        assert my_bond_ommp.particle1 == 1
+        assert my_bond_ommp.particle2 == harmonic_bond.getBondParameters(0)[1]
+        assert my_bond_ommp.particle2 == 2
+        assert my_bond_ommp.length == harmonic_bond.getBondParameters(0)[2]
+        assert my_bond_ommp.k == harmonic_bond.getBondParameters(0)[3]

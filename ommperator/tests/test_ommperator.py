@@ -16,3 +16,4 @@ class TestOmmperator(BaseTest):
         assert len(my_ommp.angle_types) == 2
         assert len(my_ommp.dihedral_types) == 1
         assert len(my_ommp.nonbond_types) == 2
+
