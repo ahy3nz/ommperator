@@ -15,7 +15,11 @@ all "links" between ommperator objects and OpenMM objects are created.
 The creation of any additional OpenMM objects will require 
 re-populating the ommperator to re-establish links.
 
-Example: Using ommperator to modify some force constants
+Example: Using mbuild+foyer to create a parametrized parmed Structure,
+creating an OpenMM system,
+ommperator to modify some OpenMM forces, 
+re-creating the parmed Structure,
+and using coMMParE to calculate new energies.
 ```python3
 import mbuild as mb
 import parmed as pmd
