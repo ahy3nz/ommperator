@@ -31,7 +31,9 @@ warnings.simplefilter("ignore")
 compound = Ethane()
 temp_struc = compound.to_parmed()
 ff = Forcefield(name='oplsaa')
-system, topology = ff.apply(compound)
+structure = ff.apply(compound)
+topology = structure.topology
+system = structure.createSystem()
 
 my_omm = ommperator.Ommperator(system, topology)
 
