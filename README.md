@@ -10,8 +10,7 @@ Thus, any functions to modify an Ommperator propagate to the
 associated OpenMM object, which is then reflected in other
 Ommperator objects.
 
-Example: modify foyer to return an openmm system and topology prior to 
-converting into a parmed structure
+Example: Using ommperator to modify some force constants
 ```python3
 import mbuild as mb
 import parmed as pmd
