@@ -17,3 +17,26 @@ class TestOmmperator(BaseTest):
         assert len(my_ommp.dihedral_types) == 1
         assert len(my_ommp.nonbond_types) == 2
 
+    def test_modify_topology(self, ethane_system_topology):
+        my_ommp = Ommperator(ethane_system_topology[0], 
+                            ethane_system_topology[1])
+
+        residues = [*ethane_system_topology[1].residues()]
+        ethane_system_topology[1].addAtom('added', None, residues[0])
+        my_ommp.populate_ommperator()
+        assert len(my_ommp.atoms) == 9
+
+    def test_clear_ommperator(self, ethane_system_topology):
+        my_ommp = Ommperator(ethane_system_topology[0], 
+                            ethane_system_topology[1])
+
+        my_ommp.clear_ommperator()
+        assert not hasattr('self', 'atoms')
+        assert not hasattr('self', 'bonds')
+        assert not hasattr('self', 'angles')
+        assert not hasattr('self', 'dihedrals')
+        assert not hasattr('self', 'nonbonds')
+        assert not hasattr('self', 'custom_bonds')
+        assert not hasattr('self','custom_nonbonds')
+
+

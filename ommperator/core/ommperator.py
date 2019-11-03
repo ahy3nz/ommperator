@@ -1,6 +1,6 @@
 import simtk.openmm as openmm
 from .atom import AtomOmmperator
-from .bond import HarmonicBondForceOmmperator
+from .bond import HarmonicBondForceOmmperator, CustomBondForceOmmperator
 from .angle import HarmonicAngleForceOmmperator
 from .dihedral import PeriodicTorsionForceOmmperator, RBTorsionForceOmmperator
 from .nonbond import NonbondedForceOmmperator, CustomNonbondedForceOmmperator
@@ -29,20 +29,27 @@ class Ommperator:
         self.system = system
         self.topology = topology
 
+        self.populate_ommperator()
+
+    def populate_ommperator(self):
+        self.clear_ommperator()
+
         self.atoms = []
         self.bonds = [] 
         self.angles = []
         self.dihedrals = []
         self.nonbonds = [] 
+        self.custom_bonds = []
         self.custom_nonbonds = [] 
 
         self.bond_types = {}
         self.angle_types = {}
         self.dihedral_types = {}
         self.nonbond_types = {}
+        self.custom_bond_types = {}
         self.custom_nonbond_types = {}
 
-        self._parse_atoms(topology)
+        self._parse_atoms(self.topology)
 
         for force in self.system.getForces():
             if isinstance(force, openmm.HarmonicBondForce):
@@ -55,9 +62,40 @@ class Ommperator:
                 self._parse_RB_torsions(force)
             if isinstance(force, openmm.NonbondedForce):
                 self._parse_nonbondeds(force)
+
+            if isinstance(force, openmm.CustomBondForce):
+                self._parse_custom_bonds(force)
             if isinstance(force, openmm.CustomNonbondedForce):
                 self._parse_custom_nonbondeds(force)
 
+    def clear_ommperator(self):
+        if hasattr('self', 'atoms'):
+            del self.atoms
+        if hasattr('self', 'bonds'):
+            del self.bonds
+        if hasattr('self', 'angles'):
+            del self.angles
+        if hasattr('self', 'dihedrals'):
+            del self.dihedrals
+        if hasattr('self', 'nonbonds'):
+            del self.nonbonds
+        if hasattr('self', 'custom_bonds'):
+            del self.custom_bonds
+        if hasattr('self','custom_nonbonds'):
+            del self.custom_nonbonds
+
+        if hasattr('self', 'bond_types'):
+            del self.bond_types
+        if hasattr('self', 'angle_types'):
+            del self.angle_types
+        if hasattr('self', 'dihedral_types'):
+            del self.dihedral_types
+        if hasattr('self', 'nonbond_types'):
+            del self.nonbond_types
+        if hasattr('self', 'custom_bond_types'):
+            del self.custom_bond_types
+        if hasattr('self', 'custom_nonbond_types'):
+            del self.custom_nonbond_types
 
     def _parse_atoms(self, topology):
         self.atoms = [AtomOmmperator(self, atom) for atom in topology.atoms()]
@@ -157,6 +195,20 @@ class Ommperator:
 
             self.nonbond_types[key] = force_container
             self.nonbonds.append(to_add)
+
+    def _parse_custom_bonds(self, force):
+        """ For every set of parameters within the CustomBondForce,
+        create an associated CustomBondOmmperator """
+        for i in range(force.getNumBonds()):
+            p1, p2, params = force.getBondParameters(i)
+            to_add = CustomBondForceOmmperator(self, force, i)
+            first, second = sorted([self.atoms[p1].id, self.atoms[p2].id])
+            key = '{}-{}'.format(first,second)
+            force_container = self.custom_bond_types.get(key, CustomForceContainer())
+            force_container.append(to_add)
+
+            self.custom_bond_types[key] = force_container
+            self.custom_bonds.append(to_add)
 
     def _parse_custom_nonbondeds(self, force):
         """ For every set of parameters within the CustomNonbondedForce,
